@@ -2819,6 +2819,63 @@ class ModelInfo {
         ),
       ]),
     );
+    const sha = info['SHA256'];
+    let modelInfo;
+    if (sha) {
+      try{
+        modelInfo = await Civitai.requestInfo(sha, 'model-versions/by-hash');
+        console.log(modelInfo);
+      } catch (e) {
+        console.error(e);
+      }
+    }
+    if (modelInfo) {
+      innerHtml.push(
+        $el('br'),
+        $el('h2', [modelInfo.model.name + ' ' + modelInfo.name + ' :']),
+        $el(
+          'div',
+          (() => {
+            const elems = [
+              $el('p', [
+                'CivitAI URL: ',
+                $el('a', {
+                  href: `https://civitai.com/models/${modelInfo.modelId}?modelVersionId=${modelInfo.id}`,
+                  target: '_blank',
+                  rel: 'noopener noreferrer',
+                }, [`https://civitai.com/models/${modelInfo.modelId}?modelVersionId=${modelInfo.id}`]),
+              ]),
+
+              $el('p', ['AIR: ' + modelInfo.air]),
+            ];
+            if(modelInfo.model.type) {
+              elems.push($el('p', ['Type: ' + modelInfo.model.type]));
+            }
+            if(modelInfo.baseModel) {
+              elems.push($el('p', ['Base Model: ' + modelInfo.baseModel]));
+            }
+            if(modelInfo.baseModelType) {
+              elems.push($el('p', ['Base Model Type: ' + modelInfo.baseModelType]));
+            }
+            if(modelInfo.model.nsfw) {
+              elems.push($el('p', ['NSFW: ' + modelInfo.model.nsfw.toString()]));
+            }
+            if (modelInfo.trainedWords) {
+              elems.push($el('p', ['Trained Words: ' + modelInfo.trainedWords]));
+            }
+            if (modelInfo.description) {
+              elems.push($el('br'));
+              const html = marked.parse(modelInfo.description);
+              elems.push($el('div', { innerHTML: html }));
+            }
+            return elems;
+          })(),
+
+        ),
+      );
+    }
+
+
     infoHtml.append.apply(infoHtml, innerHtml);
     // TODO: set default value of dropdown and value to model type?
 
