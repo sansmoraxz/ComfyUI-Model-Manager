@@ -3411,30 +3411,7 @@ class Civitai {
    * @returns {Promise<string>}
    */
   static async getFullSizeImageUrl(stringUrl) {
-    const imageUrlPrefix = Civitai.imageUrlPrefix();
-    if (!stringUrl.startsWith(imageUrlPrefix)) {
-      return '';
-    }
-    const i0 = stringUrl.lastIndexOf('/');
-    const i1 = stringUrl.lastIndexOf('.');
-    if (i0 === -1 || i1 === -1) {
-      return '';
-    }
-    const id = parseInt(stringUrl.substring(i0 + 1, i1)).toString();
-    const url = `https://civitai.com/api/v1/images?imageId=${id}`;
-    try {
-      const response = await fetch(url);
-      const imageInfo = await response.json();
-      const items = imageInfo['items'];
-      if (items.length === 0) {
-        console.warn('Civitai /api/v1/images returned 0 items.');
-        return stringUrl;
-      }
-      return items[0]['url'];
-    } catch (error) {
-      console.error('Failed to get image info from Civitai!', error);
-      return stringUrl;
-    }
+    return stringUrl;
   }
 }
 
