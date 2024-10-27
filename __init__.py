@@ -1078,6 +1078,8 @@ async def move_model(request):
         result["alert"] = "Cannot change model extension!"
         return web.json_response(result)
     new_file_dir, new_file_name = os.path.split(new_file)
+    if not os.path.exists(new_file_dir):
+        os.makedirs(new_file_dir, exist_ok=True)
     if not os.path.isdir(new_file_dir):
         result["alert"] = "Destination directory does not exist!"
         return web.json_response(result)
